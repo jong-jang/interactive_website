@@ -47,3 +47,6 @@ a {
 .local-nav-links a:not(.product-name) {
 	margin-left: 2em;
 }
+.scroll-section {
+	padding-top: 50vh;
+}
