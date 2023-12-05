@@ -48,6 +48,18 @@
 			sceneInfo[i].scrollHeight = sceneInfo[i].heightNum * window.innerHeight;
 			sceneInfo[i].objs.container.style.height = `${sceneInfo[i].scrollHeight}px`;
 		}
+
+		yOffset = window.scrollY;
+
+		let totalScrollheight = 0;
+		for (let i = 0; i < sceneInfo.length; i++) {
+			totalScrollheight += sceneInfo[i].scrollHeight;
+			if (totalScrollheight >= yOffset) {
+				currentScene = i;
+				break;
+			}
+		}
+		document.body.setAttribute('id', `show-scene-${currentScene}`);
 	}
 
 	function scrollLoop() {
@@ -58,20 +70,19 @@
 
 		if (yOffset > prevScrollHeight + sceneInfo[currentScene].scrollHeight) {
 			currentScene++;
+			document.body.setAttribute('id', `show-scene-${currentScene}`);
 		}
 		if (yOffset < prevScrollHeight) {
 			if (currentScene === 0) return; // 브라우저 바운스 효과로 인해 마이너스가 되는것을 방지(모바일)
 			currentScene--;
+			document.body.setAttribute('id', `show-scene-${currentScene}`);
 		}
-
-		console.log(currentScene);
 	}
 
-	window.addEventListener('resize', setLayout);
 	window.addEventListener('scroll', () => {
 		yOffset = window.scrollY;
 		scrollLoop();
 	});
-
-	setLayout();
+	window.addEventListener('resize', setLayout);
+	window.addEventListener('load', setLayout);
 })();
