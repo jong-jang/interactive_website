@@ -73,23 +73,23 @@
 				imageSequence: [0, 959],
 				canvas_opacity_in: [0, 1, { start: 0, end: 0.1 }],
 				canvas_opacity_out: [1, 0, { start: 0.95, end: 1 }],
-				messageA_translateY_in: [20, 0, { start: 0.25, end: 0.3 }],
-				messageB_translateY_in: [30, 0, { start: 0.7, end: 0.75 }],
+				messageA_translateY_in: [20, 0, { start: 0.15, end: 0.2 }],
+				messageB_translateY_in: [30, 0, { start: 0.5, end: 0.55 }],
 				messageC_translateY_in: [30, 0, { start: 0.72, end: 0.77 }],
-				messageA_opacity_in: [0, 1, { start: 0.25, end: 0.3 }],
-				messageB_opacity_in: [0, 1, { start: 0.7, end: 0.75 }],
+				messageA_opacity_in: [0, 1, { start: 0.15, end: 0.2 }],
+				messageB_opacity_in: [0, 1, { start: 0.5, end: 0.55 }],
 				messageC_opacity_in: [0, 1, { start: 0.72, end: 0.77 }],
-				messageA_translateY_out: [0, -20, { start: 0.35, end: 0.4 }],
-				messageB_translateY_out: [0, -20, { start: 0.73, end: 0.78 }],
+				messageA_translateY_out: [0, -20, { start: 0.3, end: 0.35 }],
+				messageB_translateY_out: [0, -20, { start: 0.58, end: 0.63 }],
 				messageC_translateY_out: [0, -20, { start: 0.85, end: 0.9 }],
-				messageA_opacity_out: [1, 0, { start: 0.35, end: 0.4 }],
-				messageB_opacity_out: [1, 0, { start: 0.73, end: 0.78 }],
+				messageA_opacity_out: [1, 0, { start: 0.3, end: 0.35 }],
+				messageB_opacity_out: [1, 0, { start: 0.58, end: 0.63 }],
 				messageC_opacity_out: [1, 0, { start: 0.85, end: 0.9 }],
-				pinB_scaleY: [0.5, 1, { start: 0.63, end: 0.68 }],
+				pinB_scaleY: [0.5, 1, { start: 0.5, end: 0.55 }],
 				pinC_scaleY: [0.5, 1, { start: 0.72, end: 0.77 }],
-				pinB_opacity_in: [0, 1, { start: 0.65, end: 0.68 }],
+				pinB_opacity_in: [0, 1, { start: 0.5, end: 0.55 }],
 				pinC_opacity_in: [0, 1, { start: 0.72, end: 0.77 }],
-				pinB_opacity_out: [1, 0, { start: 0.73, end: 0.78 }],
+				pinB_opacity_out: [1, 0, { start: 0.58, end: 0.63 }],
 				pinC_opacity_out: [1, 0, { start: 0.85, end: 0.9 }],
 			},
 		},
@@ -101,6 +101,10 @@
 			objs: {
 				container: document.querySelector('#scroll-section-3'),
 				canvasCaption: document.querySelector('.canvas-caption'),
+				canvas: document.querySelector('.image-blend-canvas'),
+				context: document.querySelector('.image-blend-canvas').getContext('2d'),
+				imagesPath: ['./images/blend-image-1.jpg', './images/blend-image-2.jpg'],
+				images: [],
 			},
 			values: {},
 		},
@@ -119,6 +123,13 @@
 			imgElem2.src = `./video/002/IMG_${7027 + i}.JPG`;
 			sceneInfo[2].objs.videoImages.push(imgElem2);
 		}
+
+		let imgElem3;
+		for (let i = 0; i < sceneInfo[3].objs.imagesPath.length; i++) {
+			imgElem3 = new Image();
+			imgElem3.src = sceneInfo[3].objs.imagesPath[i];
+			sceneInfo[3].objs.images.push(imgElem3);
+		}
 	}
 	setCanvasImages();
 
@@ -128,22 +139,23 @@
 			if (sceneInfo[i].type === 'sticky') {
 				sceneInfo[i].scrollHeight = sceneInfo[i].heightNum * window.innerHeight;
 			} else if (sceneInfo[i].type === 'normal') {
-				sceneInfo[i].scrollHeight = sceneInfo[i].objs.container.offsetHeight;
+				sceneInfo[i].scrollHeight = sceneInfo[i].objs.content.offsetHeight + window.innerHeight * 0.5;
 			}
 			sceneInfo[i].objs.container.style.height = `${sceneInfo[i].scrollHeight}px`;
 		}
 
-		yOffset = window.scrollY;
+		yOffset = window.pageYOffset;
 
-		let totalScrollheight = 0;
+		let totalScrollHeight = 0;
 		for (let i = 0; i < sceneInfo.length; i++) {
-			totalScrollheight += sceneInfo[i].scrollHeight;
-			if (totalScrollheight >= yOffset) {
+			totalScrollHeight += sceneInfo[i].scrollHeight;
+			if (totalScrollHeight >= yOffset) {
 				currentScene = i;
 				break;
 			}
 		}
 		document.body.setAttribute('id', `show-scene-${currentScene}`);
+
 		const heightRatio = window.innerHeight / 1080;
 		sceneInfo[0].objs.canvas.style.transform = `translate3d(-50%, -50%, 0) scale(${heightRatio})`;
 		sceneInfo[2].objs.canvas.style.transform = `translate3d(-50%, -50%, 0) scale(${heightRatio})`;
@@ -281,6 +293,19 @@
 
 			case 3:
 				// console.log('3 play');
+				// 가로/세로 모두 꽉 차게 하기 위해 여기서 세팅(계산 필요)
+				const widthRatio = window.innerHeight / objs.canvas.width;
+				const heightRatio = window.innerHeight / objs.canvas.height;
+				let canvasScaleRatio;
+				if (widthRatio <= heightRatio) {
+					canvasScaleRatio = heightRatio;
+				} else {
+					canvasScaleRatio = widthRatio;
+				}
+
+				objs.canvas.style.transform = `scale(${canvasScaleRatio})`;
+				objs.context.drawImage(objs.images[0], 0, 0);
+
 				break;
 		}
 	}
