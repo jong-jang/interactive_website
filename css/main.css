@@ -142,7 +142,7 @@ a {
 }
 .canvas-caption {
 	max-width: 1000px;
-	margin: -8em auto 0;
+	margin: 0 auto 0;
 	padding: 0 1rem;
 	color: #888;
 	font-size: 1.2rem;
