@@ -1,5 +1,5 @@
 (() => {
-	let yOffset = 0; // window.pageYOffset 대신 쓸 변수
+	let yOffset = 0; // window.scrollY 대신 쓸 변수
 	let prevScrollHeight = 0; // 현재 스크롤 위치(yOffset)보다 이전에 위치한 스크롤 섹션들의 스크롤 높이값의 합
 	let currentScene = 0; // 현재 활성화된(눈 앞에 보고있는) 씬(scroll-section)
 	let enterNewScene = false; // 새로운 scene이 시작된 순간 true
@@ -164,7 +164,7 @@
 			sceneInfo[i].objs.container.style.height = `${sceneInfo[i].scrollHeight}px`;
 		}
 
-		yOffset = window.pageYOffset;
+		yOffset = window.scrollY;
 
 		let totalScrollHeight = 0;
 		for (let i = 0; i < sceneInfo.length; i++) {
@@ -533,7 +533,7 @@
 		}
 
 		window.addEventListener('scroll', () => {
-			yOffset = window.pageYOffset;
+			yOffset = window.scrollY;
 			scrollLoop();
 			checkMenu();
 
@@ -556,9 +556,9 @@
 			}, 500);
 		});
 
-		document.querySelector('.loading').addEventListener('transitionend', (e) => {
-			document.body.removeChild(e.currentTarget);
-		});
+		// document.querySelector('.loading').addEventListener('transitionend', (e) => {
+		// 	document.body.removeChild(e.currentTarget);
+		// });
 	});
 
 	setCanvasImages();
