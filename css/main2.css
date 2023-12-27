@@ -120,7 +120,7 @@ a {
 .pin {
 	width: 1px;
 	height: 100px;
-	background: rgb(29, 29, 31);
+	background: rgb(255, 255, 255);
 }
 #scroll-section-2 .b {
 	top: 10%;
@@ -166,6 +166,9 @@ a {
 #show-scene-2 #scroll-section-2 .sticky-elem,
 #show-scene-3 #scroll-section-3 .sticky-elem {
 	display: block;
+}
+#show-scene-2 #scroll-section-2 .sticky-elem {
+	color: #fff;
 }
 .sticky-elem-canvas {
 	top: 0;
