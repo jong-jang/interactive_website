@@ -122,26 +122,108 @@
 		},
 	];
 
-	function setCanvasImages() {
-		let imgElem;
+	// 캔버스 이미지 로드
+
+	let totalImages = 0;
+	const scene0Images = [];
+	const scene2Images = [];
+
+	// Scene 0 이미지 로드
+	function loadImagesOfScene0() {
+		if (sceneInfo[0].finishedLoadingImages) return;
+
+		let numberOfLoadedImages = 0;
 		for (let i = 0; i < sceneInfo[0].values.videoImageCount; i++) {
-			imgElem = new Image();
+			let imgElem = new Image();
 			imgElem.src = `./video/001/IMG_${6726 + i}.JPG`;
-			sceneInfo[0].objs.videoImages.push(imgElem);
-		}
+			imgElem.addEventListener('load', () => {
+				scene0Images.push(imgElem);
+				numberOfLoadedImages++;
 
-		let imgElem2;
+				totalImages++;
+
+				if (numberOfLoadedImages === sceneInfo[0].values.videoImageCount) {
+					// 해당 씬의 이미지가 모두 로드되었으면
+					sceneInfo[0].finishedLoadingImages = true;
+					setImagesOfScene0();
+					initAfterLoadImages();
+
+					if (!sceneInfo[2].finishedLoadingImages) {
+						loadImagesOfScene2();
+					}
+				}
+			});
+		}
+	}
+
+	// Scene 2 이미지 로드
+	function loadImagesOfScene2() {
+		if (sceneInfo[2].finishedLoadingImages) return;
+
+		let numberOfLoadedImages = 0;
 		for (let i = 0; i < sceneInfo[2].values.videoImageCount; i++) {
-			imgElem2 = new Image();
-			imgElem2.src = `./video/003/${1 + i}.jpg`;
-			sceneInfo[2].objs.videoImages.push(imgElem2);
-		}
+			let imgElem = new Image();
+			imgElem.src = `./video/003/${1 + i}.jpg`;
+			imgElem.addEventListener('load', () => {
+				scene2Images.push(imgElem);
+				numberOfLoadedImages++;
 
-		let imgElem3;
-		for (let i = 0; i < sceneInfo[3].objs.imagesPath.length; i++) {
-			imgElem3 = new Image();
-			imgElem3.src = sceneInfo[3].objs.imagesPath[i];
-			sceneInfo[3].objs.images.push(imgElem3);
+				totalImages++;
+
+				if (numberOfLoadedImages === sceneInfo[2].values.videoImageCount) {
+					// 해당 씬의 이미지가 모두 로도되었으면
+					sceneInfo[2].finishedLoadingImages = true;
+					setImagesOfScene2();
+					initAfterLoadImages();
+
+					if (!sceneInfo[0].finishedLoadingImages) {
+						loadImagesOfScene0();
+					}
+				}
+			});
+		}
+	}
+
+	function getImageNumber(str) {
+		const newStr = str.substring(str.lastIndexOf('_') + 1, str.lastIndexOf('.'));
+		return newStr * 1;
+	}
+
+	// 이미지가 로드되는 순서는 이미지 번호 순으로 보장이 안되기 때문에 정렬 함수로 번호순 정렬이 필요
+	function sortImages(imageArray) {
+		let temp;
+		let imageNumber1;
+		let imageNumber2;
+		for (let i = 0; i < imageArray.length; i++) {
+			for (let j = 0; j < imageArray.length - i; j++) {
+				if (j < imageArray.length - 1) {
+					imageNumber1 = getImageNumber(imageArray[j].currentSrc);
+					imageNumber2 = getImageNumber(imageArray[j + 1].currentSrc);
+					if (imageNumber1 > imageNumber2) {
+						temp = imageArray[j];
+						imageArray[j] = imageArray[j + 1];
+						imageArray[j + 1] = temp;
+					}
+				}
+			}
+		}
+	}
+
+	function setImagesOfScene0() {
+		// Scene 0에 쓰이는 scene0Images 이미지 배열을 번호순 정렬 후
+		// sceneInfo[0].objs.videoImages 배열에 저장
+		sortImages(scene0Images);
+		for (let i = 0; i < scene0Images.length; i++) {
+			sceneInfo[0].objs.videoImages.push(scene0Images[i]);
+		}
+	}
+
+	function setImagesOfScene2() {
+		// Scene 2에 쓰이는 scene2Images 이미지 배열을 번호순 정렬 후
+		// sceneInfo[2].objs.videoImages 배열에 저장
+		sortImages(scene2Images);
+		for (let i = 0; i < scene2Images.length; i++) {
+			sceneInfo[2].objs.videoImages.push(scene2Images[i]);
 		}
 	}
 
@@ -511,11 +593,10 @@
 		}
 	}
 
-	window.addEventListener('load', () => {
-		setLayout(); // 중간에 새로고침 시, 콘텐츠 양에 따라 높이 계산에 오차가 발생하는 경우를 방지하기 위해 before-load 클래스 제거 전에도 확실하게 높이를 세팅하도록 한번 더 실행
-		document.body.classList.remove('before-load');
-		setLayout();
-		sceneInfo[0].objs.context.drawImage(sceneInfo[0].objs.videoImages[0], 0, 0);
+	function initAfterLoadImages() {
+		if (currentScene !== 2 && sceneInfo[0].objs.videoImages[0]) {
+			sceneInfo[0].objs.context.drawImage(sceneInfo[0].objs.videoImages[0], 0, 0);
+		}
 
 		// 중간에서 새로고침 했을 경우 자동 스크롤로 제대로 그려주기
 		let tempYOffset = yOffset;
@@ -530,6 +611,27 @@
 				}
 				tempScrollCount++;
 			}, 20);
+		}
+	}
+
+	window.addEventListener('DOMContentLoaded', () => {
+		setLayout(); // 중간에 새로고침 시, 콘텐츠 양에 따라 높이 계산에 오차가 발생하는 경우를 방지하기 위해 before-load 클래스 제거 전에도 확실하게 높이를 세팅하도록 한번 더 실행
+		document.body.classList.remove('before-load');
+		setLayout();
+
+		let imgElem;
+		for (let i = 0; i < sceneInfo[3].objs.imagesPath.length; i++) {
+			imgElem = new Image();
+			imgElem.src = sceneInfo[3].objs.imagesPath[i];
+			sceneInfo[3].objs.images.push(imgElem);
+		}
+
+		if (currentScene !== 2) {
+			// 0번, 첫번째 씬의 이미지를 로드
+			loadImagesOfScene0();
+		} else {
+			// 2번, 세번째 씬의 이미지를 로드
+			loadImagesOfScene2();
 		}
 
 		window.addEventListener('scroll', () => {
@@ -557,9 +659,9 @@
 		});
 
 		document.querySelector('.loading').addEventListener('transitionend', (e) => {
-			document.body.removeChild(e.currentTarget);
+			if (e.currentTarget.parentNode === document.body) {
+				document.body.removeChild(e.currentTarget);
+			}
 		});
 	});
-
-	setCanvasImages();
 })();
