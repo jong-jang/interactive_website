@@ -45,6 +45,7 @@
 				messageC_translateY_out: [0, -20, { start: 0.65, end: 0.7 }],
 				messageD_translateY_out: [0, -20, { start: 0.85, end: 0.9 }],
 			},
+			finishedLoadingImages: false,
 		},
 		{
 			// 1
@@ -96,6 +97,7 @@
 				pinB_opacity_out: [1, 0, { start: 0.58, end: 0.63 }],
 				pinC_opacity_out: [1, 0, { start: 0.85, end: 0.9 }],
 			},
+			finishedLoadingImages: false,
 		},
 		{
 			// 3
@@ -171,7 +173,7 @@
 				totalImages++;
 
 				if (numberOfLoadedImages === sceneInfo[2].values.videoImageCount) {
-					// 해당 씬의 이미지가 모두 로도되었으면
+					// 해당 씬의 이미지가 모두 로드되었으면
 					sceneInfo[2].finishedLoadingImages = true;
 					setImagesOfScene2();
 					initAfterLoadImages();
