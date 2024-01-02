@@ -118,7 +118,7 @@ body.before-load {
 	color: #888;
 }
 .description strong {
-	float: left;
+	display: block;
 	margin-right: 0.2em;
 	font-size: 3rem;
 	color: rgb(29, 29, 31);
@@ -217,18 +217,26 @@ body.before-load {
 	transition: 0.5s;
 }
 .before-load .container {
-    display: none;
+	display: none;
 }
 .before-load .loading {
 	opacity: 1;
 }
 @keyframes loading-spin {
-	100% { transform: rotate(360deg); }
+	100% {
+		transform: rotate(360deg);
+	}
 }
 @keyframes loading-circle-ani {
-	0% { stroke-dashoffset: 157; }
-	75% { stroke-dashoffset: -147; }
-	100% { stroke-dashoffset: -157; }
+	0% {
+		stroke-dashoffset: 157;
+	}
+	75% {
+		stroke-dashoffset: -147;
+	}
+	100% {
+		stroke-dashoffset: -157;
+	}
 }
 .loading-circle {
 	width: 54px;
