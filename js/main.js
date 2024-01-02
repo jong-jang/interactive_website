@@ -556,9 +556,9 @@
 			}, 500);
 		});
 
-		// document.querySelector('.loading').addEventListener('transitionend', (e) => {
-		// 	document.body.removeChild(e.currentTarget);
-		// });
+		document.querySelector('.loading').addEventListener('transitionend', (e) => {
+			document.body.removeChild(e.currentTarget);
+		});
 	});
 
 	setCanvasImages();
