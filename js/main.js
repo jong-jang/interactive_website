@@ -25,8 +25,8 @@
 				videoImages: [],
 			},
 			values: {
-				videoImageCount: 300,
-				imageSequence: [0, 299],
+				videoImageCount: 784,
+				imageSequence: [0, 783],
 				canvas_opacity: [1, 0, { start: 0.9, end: 1 }],
 				messageA_opacity_in: [0, 1, { start: 0.1, end: 0.2 }],
 				messageB_opacity_in: [0, 1, { start: 0.3, end: 0.4 }],
@@ -137,7 +137,7 @@
 		let numberOfLoadedImages = 0;
 		for (let i = 0; i < sceneInfo[0].values.videoImageCount; i++) {
 			let imgElem = new Image();
-			imgElem.src = `./video/001/IMG_${6726 + i}.JPG`;
+			imgElem.src = `./video/004/${1 + i}.JPG`;
 			imgElem.addEventListener('load', () => {
 				scene0Images.push(imgElem);
 				numberOfLoadedImages++;
