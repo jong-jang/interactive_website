@@ -62,6 +62,16 @@ body.before-load {
 	height: 100%;
 	margin: 0 auto;
 }
+#show-scene-0 .global-nav-links a,
+#show-scene-0 .local-nav-links a {
+	color: #fff;
+}
+#scroll-section-0 h1 {
+	color: #fff;
+}
+#scroll-section-0 .sticky-elem {
+	color: #fff;
+}
 .global-nav-links {
 	justify-content: space-between;
 }
