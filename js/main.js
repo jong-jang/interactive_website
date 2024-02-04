@@ -137,7 +137,7 @@
 		let numberOfLoadedImages = 0;
 		for (let i = 0; i < sceneInfo[0].values.videoImageCount; i++) {
 			let imgElem = new Image();
-			imgElem.src = `./video/004/${1 + i}.JPG`;
+			imgElem.src = `./video/004/${1 + i}.jpg`;
 			imgElem.addEventListener('load', () => {
 				scene0Images.push(imgElem);
 				numberOfLoadedImages++;
