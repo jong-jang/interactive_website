@@ -25,8 +25,8 @@
 				videoImages: [],
 			},
 			values: {
-				videoImageCount: 784,
-				imageSequence: [0, 783],
+				videoImageCount: 400,
+				imageSequence: [0, 399],
 				canvas_opacity: [1, 0, { start: 0.9, end: 1 }],
 				messageA_opacity_in: [0, 1, { start: 0.1, end: 0.2 }],
 				messageB_opacity_in: [0, 1, { start: 0.3, end: 0.4 }],
