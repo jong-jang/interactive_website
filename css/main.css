@@ -179,7 +179,7 @@ body.before-load {
 	justify-content: center;
 	height: 7rem;
 	color: white;
-	background: darkorange;
+	background: #000;
 }
 .sticky-elem {
 	display: none;
